@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi5Paisa", "WebApi5Paisa\WebApi5Paisa.csproj", "{A7FB6309-9DAD-4C34-8FFC-C4096A733507}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InnovatiaAlgoSence", "..\..\..\R&D Project\WebApi5Paisa\InnovatiaAlgoSence\InnovatiaAlgoSence.csproj", "{61B596A3-1F7D-44D5-AA35-0153364684F6}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{A7FB6309-9DAD-4C34-8FFC-C4096A733507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7FB6309-9DAD-4C34-8FFC-C4096A733507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7FB6309-9DAD-4C34-8FFC-C4096A733507}.Release|Any CPU.Build.0 = Release|Any CPU
-		{61B596A3-1F7D-44D5-AA35-0153364684F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{61B596A3-1F7D-44D5-AA35-0153364684F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{61B596A3-1F7D-44D5-AA35-0153364684F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{61B596A3-1F7D-44D5-AA35-0153364684F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
