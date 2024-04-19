@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Sarvesh\\R&D Project\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj": {}
+    "C:\\Sarvesh\\LiveProject\\InnovvatiaConsultancyServices\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj": {}
   },
   "projects": {
-    "C:\\Sarvesh\\R&D Project\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj": {
+    "C:\\Sarvesh\\LiveProject\\InnovvatiaConsultancyServices\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Sarvesh\\R&D Project\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj",
+        "projectUniqueName": "C:\\Sarvesh\\LiveProject\\InnovvatiaConsultancyServices\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj",
         "projectName": "WebApi5Paisa",
-        "projectPath": "C:\\Sarvesh\\R&D Project\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj",
+        "projectPath": "C:\\Sarvesh\\LiveProject\\InnovvatiaConsultancyServices\\WebApi5Paisa\\WebApi5Paisa\\WebApi5Paisa.csproj",
         "packagesPath": "C:\\Users\\Sarvesh\\.nuget\\packages\\",
-        "outputPath": "C:\\Sarvesh\\R&D Project\\WebApi5Paisa\\WebApi5Paisa\\obj\\",
+        "outputPath": "C:\\Sarvesh\\LiveProject\\InnovvatiaConsultancyServices\\WebApi5Paisa\\WebApi5Paisa\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Sarvesh\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -55,6 +55,14 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.5.0, )"
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.6, )"
             }
           },
           "imports": [

@@ -102,7 +102,7 @@ namespace WebApi5Paisa
         public string ExchType { get; set; }
         public string ExchDescription { get; set; }
         public string MarketStatus { get; set; }
-        
+
     }
 
     public class OrdStatusResList

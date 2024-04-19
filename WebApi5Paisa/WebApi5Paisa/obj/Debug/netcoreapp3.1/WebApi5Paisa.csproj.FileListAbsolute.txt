@@ -34,3 +34,47 @@ C:\Sarvesh\R&D Project\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.
 C:\Sarvesh\R&D Project\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
 C:\Sarvesh\R&D Project\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
 C:\Sarvesh\R&D Project\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Text.Json.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.csproj.AssemblyReference.cache
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.GeneratedMSBuildEditorConfig.editorconfig
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.AssemblyInfoInputs.cache
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.AssemblyInfo.cs
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.csproj.CoreCompileInputs.cache
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.MvcApplicationPartsAssemblyInfo.cs
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.MvcApplicationPartsAssemblyInfo.cache
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.pdb
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\appsettings.Development.json
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\APICredentials.json
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\appsettings.json
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\WebApi5Paisa.exe
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\WebApi5Paisa.deps.json
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\WebApi5Paisa.runtimeconfig.json
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\WebApi5Paisa.runtimeconfig.dev.json
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\WebApi5Paisa.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\WebApi5Paisa.pdb
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Azure.Core.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Newtonsoft.Json.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\RestSharp.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.ClientModel.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Configuration.ConfigurationManager.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Data.SqlClient.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Diagnostics.DiagnosticSource.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Memory.Data.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Runtime.CompilerServices.Unsafe.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Security.Cryptography.ProtectedData.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Text.Encodings.Web.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\System.Text.Json.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\runtimes\win-arm64\native\sni.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\sni.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\sni.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\staticwebassets\WebApi5Paisa.StaticWebAssets.Manifest.cache
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.RazorTargetAssemblyInfo.cache
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.csproj.CopyComplete
+C:\Sarvesh\LiveProject\InnovvatiaConsultancyServices\WebApi5Paisa\WebApi5Paisa\obj\Debug\netcoreapp3.1\WebApi5Paisa.genruntimeconfig.cache

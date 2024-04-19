@@ -4,6 +4,8 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using WebApi5Paisa.DAL;
+using WebApi5Paisa.Models;
 
 namespace WebApi5Paisa.Controllers
 {
@@ -11,16 +13,23 @@ namespace WebApi5Paisa.Controllers
     [ApiController]
     public class FivepaisaApiController : ControllerBase
     {
+        # region key
         private string _apiKey = "C67swLy6gPrdmUhNQA8JcrTRtPAvwDA5";
-        private string EncryptionKey= "cyJ5ThTtO5uM0OSxgEqtoVSYuUVUCshR";
-        private string encryptUserId= "7kSEQSA4FIS";
+        private string EncryptionKey = "cyJ5ThTtO5uM0OSxgEqtoVSYuUVUCshR";
+        private string encryptUserId = "7kSEQSA4FIS";
         private string _clientCode = "50084790";
         Token Token { get; set; }
-
+        private string connectionString;
+        EmployeeDAL employeeDAL = new EmployeeDAL();
+        string msg;
         private readonly JsonData _JsonData;
-        private readonly string  _OpenAPIURL,_Holding, _MarketStatus, _LoginCheck, _AuthToken;
+        private readonly string _OpenAPIURL, _Holding,
+            _MarketStatus, _LoginCheck, _AuthToken, _PlaceOrderRequest,
+            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory;
+        #endregion
         public FivepaisaApiController(IConfiguration _iConfig)
         {
+            #region config
             var folderDetails = Path.Combine(Directory.GetCurrentDirectory(), "APICredentials.json");
             var JSON = System.IO.File.ReadAllText(folderDetails);
 
@@ -28,9 +37,20 @@ namespace WebApi5Paisa.Controllers
 
             _OpenAPIURL = _iConfig.GetValue<string>("APIDetails:OpenAPIURL");
             _Holding = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:Holding");
+            _Margin = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:Margin");
             _MarketStatus = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:MarketStatus");
             _LoginCheck = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TOTPLogin");
             _AuthToken = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:AuthToken");
+            _PlaceOrderRequest = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:PlaceOrderRequest");
+            _Position = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:Position");
+            _OrderCancel = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:CancelOrderRequest");
+            _OrderBook = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:OrderBook");
+            _TradeBook = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBook");
+            _TradeBookHistory = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBookHistory");
+
+
+            connectionString = _iConfig.GetConnectionString("ConnectionString");
+            #endregion
         }
         [HttpGet]
         [Route("TOTPLogin")]
@@ -79,15 +99,18 @@ namespace WebApi5Paisa.Controllers
 
                     res.status = agr.body.Status;
                     res.http_error = agr.body.Message;
+                    ///////Log Write in txt
+                    Logger.LogWrite("TOTPLogin Successfully" + DateTime.Now);
                 }
 
             }
             catch (Exception ex)
-            {  
+            {
                 res.http_error = ex.Message;
             }
             return res;
         }
+
 
         [HttpGet]
         [Route("Holding")]
@@ -109,15 +132,117 @@ namespace WebApi5Paisa.Controllers
 
                 //response = ApiRequest.SendApiRequestCookies(_Holding, result);
                 response = ApiRequest.SendApiRequestHolding(_Holding, result);
-                
+
+                ///////Log Write in txt
+                Logger.LogWrite("Holding function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
             }
             catch (Exception)
             {
                 throw;
             }
-            
+
             return response;
         }
+
+
+        [HttpGet]
+        [Route("Margin")]
+        public string Margin()
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ClientCode = _clientCode }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestMargin(_Margin, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("Margin function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("Position")]
+        public string Position()
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ClientCode = _clientCode }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestPosition(_Position, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("Position function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
+
         [HttpGet]
         [Route("MarketStatus")]
         public string MarketStatus()
@@ -138,6 +263,8 @@ namespace WebApi5Paisa.Controllers
 
                 //response = ApiRequest.SendApiRequestCookies(_Holding, result);
                 response = ApiRequest.SendApiRequestMarketStatus(_MarketStatus, result);
+                ///////Log Write in txt
+                Logger.LogWrite("MarketStatus function data fetched" + DateTime.Now);
 
             }
             catch (Exception)
@@ -146,5 +273,220 @@ namespace WebApi5Paisa.Controllers
             }
             return response;
         }
+
+        [HttpGet]
+        [Route("PlaceOrderRequest")]
+        public string PlaceOrderRequest([FromQuery] PlaceOrderRequest pORequest)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new
+                    {
+                        ClientCode = pORequest.ClientCode,
+                        Exchange = pORequest.Exchange,
+                        ExchangeType = pORequest.ExchangeType,
+                        Qty = pORequest.Qty,
+                        Price = pORequest.Price,
+                        OrderType = pORequest.OrderType,
+                        ScripData = pORequest.ScripData,
+                        IsIntraday = pORequest.IsIntraday,
+                        DisQty = pORequest.DisQty,
+                        StopLossPrice = pORequest.StopLossPrice,
+                        AppSource = pORequest.AppSource
+                    }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, result);
+                ///////Log Write in txt
+                Logger.LogWrite("PlaceOrderRequest function data fetched" + DateTime.Now);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return response;
+        }
+
+        [HttpGet]
+        [Route("OrderCancel")]
+        public string OrderCancel([FromQuery] string exchOrderID)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ExchOrderID = exchOrderID }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestOrderCancel(_OrderCancel, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("OrderCancel function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("OrderBook")]
+        public string OrderBook()
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ClientCode = _clientCode }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestOrderBook(_OrderBook, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("OrderBook function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("TradeBook")]
+        public string TradeBook()
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ClientCode = _clientCode }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestTradeBook(_TradeBook, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("TradeBook function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
+
+        [HttpGet]
+        [Route("TradeBookHistory")]
+        public string TradeBookHistory([FromQuery] string _exchOrderID)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ClientCode = _clientCode, ExchOrderID = _exchOrderID }
+
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestTradeBookHistory(_TradeBookHistory, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("TradeBookHistory function data fetched" + DateTime.Now);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
+
+
     }
 }
