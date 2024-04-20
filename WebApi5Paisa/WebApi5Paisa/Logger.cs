@@ -16,7 +16,7 @@ namespace WebApi5Paisa
             string root = Path.Combine(Directory.GetCurrentDirectory(), @"logs");
             var yearPath = root + "\\" + currentDate.Year.ToString() + "\\";
             var MonthPath = yearPath + currentDate.Year + "-" + monthName + "\\";
-            var errorFile = MonthPath + "ErrorLogs-" + String.Format("{0:d-M-yyyy}", currentDate.Date) + ".txt";
+            var errorFile = MonthPath + "Logs-" + String.Format("{0:d-M-yyyy}", currentDate.Date) + ".txt";
             if (!Directory.Exists(root))
             {
                 Directory.CreateDirectory(root);
