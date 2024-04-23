@@ -5,7 +5,9 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi5Paisa", "WebApi5Paisa\WebApi5Paisa.csproj", "{A7FB6309-9DAD-4C34-8FFC-C4096A733507}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnovatiaAlgoSence", "InnovatiaAlgoSence\InnovatiaAlgoSence.csproj", "{DFBED4DA-BAF1-41D1-88A2-834A748DBAEB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InnovatiaAlgoSence", "InnovatiaAlgoSence\InnovatiaAlgoSence.csproj", "{DFBED4DA-BAF1-41D1-88A2-834A748DBAEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetTaskScheduler", "NetTaskScheduler\NetTaskScheduler.csproj", "{1C649DC6-009F-40FE-A40E-3D895523B453}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DFBED4DA-BAF1-41D1-88A2-834A748DBAEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFBED4DA-BAF1-41D1-88A2-834A748DBAEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFBED4DA-BAF1-41D1-88A2-834A748DBAEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C649DC6-009F-40FE-A40E-3D895523B453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C649DC6-009F-40FE-A40E-3D895523B453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C649DC6-009F-40FE-A40E-3D895523B453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C649DC6-009F-40FE-A40E-3D895523B453}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

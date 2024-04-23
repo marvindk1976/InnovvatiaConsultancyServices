@@ -1,0 +1,7 @@
+Qty	1
+Price	100	
+OrderType	BUY
+ScripData	1234
+Fromdate	2024-04-23T20:02:06
+Todate	2024-04-23T20:50:06
+IsSuccessfull	1
