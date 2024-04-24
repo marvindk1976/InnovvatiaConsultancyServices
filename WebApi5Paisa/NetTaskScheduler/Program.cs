@@ -1,12 +1,16 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using WebApi5Paisa;
 
 namespace NetTaskScheduler
 {
@@ -87,7 +91,12 @@ namespace NetTaskScheduler
 
     public class MyProcessor : BackgroundService
     {
-        string qty = ""; string Price = ""; string OrderType = ""; string ScripData = ""; DateTime Fromdatetime;
+        string Exchange = "";
+        string ExchangeType = ""; string Qty = ""; string Price = ""; string OrderType = ""; 
+        string ScripData = ""; 
+        Boolean IsIntraday = false; 
+        int DisQty ; int StopLossPrice; 
+        DateTime Fromdatetime;
         DateTime Todatetime;
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -102,12 +111,17 @@ namespace NetTaskScheduler
                     //var qty = line.Split(1) ;
                     // splitline.Split(new char[0])
                     var myString = line.Split(',');
-                    qty = myString[0];
-                    Price = myString[1];
-                    OrderType = myString[2];
-                    ScripData = myString[3];
-                    Fromdatetime = DateTime.Parse(myString[4]);
-                    Todatetime = DateTime.Parse(myString[5]);
+                    Exchange = myString[0];
+                    ExchangeType = myString[1];
+                    Qty = myString[2];
+                    Price = myString[3];
+                    OrderType = myString[4];
+                    ScripData = myString[5];
+                    IsIntraday = Convert.ToBoolean(myString[6]);
+                    DisQty = Convert.ToInt32(myString[7]);
+                    StopLossPrice = Convert.ToInt32(myString[8]);
+                    Fromdatetime = DateTime.Parse(myString[9]);
+                    Todatetime = DateTime.Parse(myString[10]);
                 }
 
 
@@ -119,6 +133,33 @@ namespace NetTaskScheduler
                 //if (fromDate >= frmSysDate && )
                 if (frmSysDate >= frmdatetime && toSysDate <= todatetime)
                 {
+                    
+                    var Request = JsonConvert.SerializeObject(new
+                    {
+                        head = new { key = "C67swLy6gPrdmUhNQA8JcrTRtPAvwDA5" },
+                        body = new
+                        {
+                            ClientCode = "50084790",
+                            Exchange = Exchange,
+                            ExchangeType = ExchangeType,
+                            Qty = Qty,
+                            Price = Price,
+                            OrderType = OrderType,
+                            ScripData = ScripData,
+                            IsIntraday = IsIntraday,
+                            DisQty = DisQty,
+                            StopLossPrice = StopLossPrice
+                        }
+
+                    });
+                    String result = Request.Replace("^\"|\"$", "");
+                    HttpClient client = new HttpClient();
+                    client.BaseAddress = new Uri("http://localhost:26328/");
+                    var response = await client.PostAsync("api/FivepaisaApi/POrderRequest", new StringContent(result, Encoding.UTF8, "application/json"));
+                    if (response != null)
+                    {
+                        Console.WriteLine(response.ToString());
+                    }
                     Console.WriteLine($"The Current date is {DateTime.Now}");
                     await Task.Delay(10000);
                 }

@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebApi5Paisa\WebApi5Paisa.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="InputTextFile\FinalInput.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Text.Json.Nodes;
 using WebApi5Paisa.DAL;
 using WebApi5Paisa.Models;
 
@@ -305,6 +306,27 @@ namespace WebApi5Paisa.Controllers
 
                 //response = ApiRequest.SendApiRequestCookies(_Holding, result);
                 response = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, result);
+                ///////Log Write in txt
+                Logger.LogWrite("PlaceOrderRequest function data fetched" + DateTime.Now);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return response;
+        }
+        [HttpPost]
+        [Route("POrderRequest")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public string POrderRequest(JsonObject jsonObject)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+                
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, jsonObject.ToString());
                 ///////Log Write in txt
                 Logger.LogWrite("PlaceOrderRequest function data fetched" + DateTime.Now);
             }
