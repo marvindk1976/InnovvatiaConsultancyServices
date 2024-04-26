@@ -1,0 +1,11 @@
+{
+  "GetJsonValue": {
+    "BaseUrl": "http://localhost:26328/",
+    "POrderUrl": "api/FivepaisaApi/POrderRequest"
+  }
+  //,
+  //"MySecondClass": {
+  //  "SettingOne": "some string value",
+  //  "SettingTwo": 42
+  //}
+}

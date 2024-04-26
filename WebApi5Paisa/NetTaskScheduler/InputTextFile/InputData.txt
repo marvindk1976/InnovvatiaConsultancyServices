@@ -1,12 +1,12 @@
 Exchange	B
 ExchangeType	D
 Qty	1
-Price	100	
+Price	1	
 OrderType	BUY
-ScripData	1234
+ScripData	1234567
 IsIntraday	TRUE	
 DisQty	1	
 StopLossPrice	0
-Fromdate	2024-04-24T22:02:06
-Todate	2024-04-24T22:50:06
+Fromdate	2024-04-26T20:59:06
+Todate	2024-04-26T21:55:06
 IsSuccessfull	0
