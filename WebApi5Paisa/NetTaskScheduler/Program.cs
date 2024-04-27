@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetTaskScheduler.AlgoHNIBAL;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -98,7 +99,9 @@ namespace NetTaskScheduler
 
     public class MyProcessor : BackgroundService
     {
+        string ClientCode = "";
         string Exchange = "";
+        string Key = "C67swLy6gPrdmUhNQA8JcrTRtPAvwDA5";
         string ExchangeType = ""; string Qty = ""; string Price = ""; string OrderType = ""; 
         string ScripData = ""; 
         Boolean IsIntraday = false; 
@@ -127,16 +130,25 @@ namespace NetTaskScheduler
                     row2 = ssize[1];
 
                     //// Write file using StreamWriter
-                    if (row1 == "IsSuccessfull" && row2 == "0")
+                    if (row1 == "Symbol")
                     {
-                        break;
-                    }
+                        string getSymbol = splitline.Substring(7);
+                        inputData += string.Concat(string.Concat(getSymbol), ",");
 
-                    inputData += string.Concat(string.Concat(row2), ",");
+                    }
+                    else
+                    {
+                        if (row1 == "IsSuccessfull" && row2 == "0")
+                        {
+                            break;
+                        }
+                        inputData += string.Concat(string.Concat(row2), ",");
+                    }
                 }
                 if (row1 == "IsSuccessfull" && row2 == "0")
                 {
 
+                    PORequest pORequest = new PORequest();
                     ////execute
                     //string FinalPath = @"C:\Sarvesh\R&D Project\ConsoleApp1\ConsoleApp1\FInputData\FinalInput.txt";
                     string fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"InputTextFile\FinalInput.txt");
@@ -175,25 +187,27 @@ namespace NetTaskScheduler
                     string[] lines = File.ReadAllLines(fullPath3);
                     foreach (string line in lines)
                     {
-                        //var qty = line.Split(1) ;
-                        // splitline.Split(new char[0])
+                        
                         var myString = line.Split(',');
-                        Exchange = myString[0];
-                        ExchangeType = myString[1];
-                        Qty = myString[2];
-                        Price = myString[3];
-                        OrderType = myString[4];
-                        ScripData = myString[5];
-                        IsIntraday = Convert.ToBoolean(myString[6]);
-                        DisQty = Convert.ToInt32(myString[7]);
-                        StopLossPrice = Convert.ToInt32(myString[8]);
-                        Fromdatetime = DateTime.Parse(myString[9]);
-                        Todatetime = DateTime.Parse(myString[10]);
+                        pORequest.ClientCode = ClientCode;
+                        pORequest.Exchange = myString[0];
+                        pORequest.ExchangeType = myString[1];
+                        pORequest.Qty = Convert.ToInt32(myString[2]);
+                        pORequest.Price = Convert.ToInt32(myString[3]);
+                        pORequest.OrderType = myString[4];
+                        pORequest.Symbol = myString[5];
+                        pORequest.IsIntraday = Convert.ToBoolean(myString[6]);
+                        pORequest.DisQty = Convert.ToInt32(myString[7]);
+                        pORequest.StopLossPrice = Convert.ToInt32(myString[8]);
+                        pORequest.TriggerPrice = Convert.ToInt32(myString[9]);
+                        pORequest.OrderStartTimeStamp = DateTime.Parse(myString[10]);
+                        pORequest.OrderEndTimeStamp = DateTime.Parse(myString[11]);
+                        pORequest.ScripData = pORequest.Symbol;
                     }
 
 
-                    DateTime frmdatetime = DateTime.Parse(Fromdatetime.ToString("MM/dd/yyyy HH:mm:ss"));
-                    DateTime todatetime = DateTime.Parse(Todatetime.ToString("MM/dd/yyyy HH:mm:ss"));
+                    DateTime frmdatetime = DateTime.Parse(pORequest.OrderStartTimeStamp.ToString("MM/dd/yyyy HH:mm:ss"));
+                    DateTime todatetime = DateTime.Parse(pORequest.OrderEndTimeStamp.ToString("MM/dd/yyyy HH:mm:ss"));
 
                     DateTime frmSysDate = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"));
                     DateTime toSysDate = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"));
@@ -203,19 +217,19 @@ namespace NetTaskScheduler
 
                         var Request = JsonConvert.SerializeObject(new
                         {
-                            head = new { key = "C67swLy6gPrdmUhNQA8JcrTRtPAvwDA5" },
+                            head = new { key = Key },
                             body = new
                             {
-                                ClientCode = "50084790",
-                                Exchange = Exchange,
-                                ExchangeType = ExchangeType,
-                                Qty = Qty,
-                                Price = Price,
-                                OrderType = OrderType,
-                                ScripData = ScripData,
-                                IsIntraday = IsIntraday,
-                                DisQty = DisQty,
-                                StopLossPrice = StopLossPrice
+                                ClientCode = pORequest.ClientCode,
+                                Exchange = pORequest.Exchange,
+                                ExchangeType = pORequest.ExchangeType,
+                                Qty = pORequest.Qty,
+                                Price = pORequest.Price,
+                                OrderType = pORequest.OrderType,
+                                ScripData = pORequest.ScripData,
+                                IsIntraday = pORequest.IsIntraday,
+                                DisQty = pORequest.DisQty,
+                                StopLossPrice = pORequest.StopLossPrice
                             }
 
                         });
@@ -223,13 +237,6 @@ namespace NetTaskScheduler
                         POrderRequestApi pOrderRequestApi = new POrderRequestApi();
                         var responseData = pOrderRequestApi.CallPOrderRequestApi(result);
 
-                        //HttpClient client = new HttpClient();
-                        //client.BaseAddress = new Uri("http://localhost:26328/");
-                        //var response = await client.PostAsync("api/FivepaisaApi/POrderRequest", new StringContent(result, Encoding.UTF8, "application/json"));
-                        //if (response != null)
-                        //{ 
-                        //    Console.WriteLine(response.ToString());
-                        //}
                         Console.WriteLine($"The Place Order request is processed Successfully...! {DateTime.Now}");
                         //Thread.Sleep(10000);
                         await Task.Delay(10000);
