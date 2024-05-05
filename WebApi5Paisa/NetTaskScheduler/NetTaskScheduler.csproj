@@ -6,6 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
   </ItemGroup>
 
@@ -15,6 +17,12 @@
 
   <ItemGroup>
     <None Update="config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Excel\Symbol_StrikeRate.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Excel\Symbol_WeeklyMonthly.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="InputTextFile\FinalInput.txt">

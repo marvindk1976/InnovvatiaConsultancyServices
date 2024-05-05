@@ -3,11 +3,16 @@ ExchangeType	D
 Qty	1
 Price	1	
 OrderType	BUY
-Symbol	BANKNIFTY 24 Nov 2022 CE 00000.00
+Symbol	BANKNIFTY
+Expiry	w1
+OptionType	PE
+LTP	48700
+NoOfStrike 5
+StrikeDirection	1
 IsIntraday	TRUE	
 DisQty	1	
 StopLossPrice	0
 TriggerPrice	1
-OrderStartTimeStamp	2024-04-27T20:59:06
-OrderEndTimeStamp	2024-04-27T22:55:06
+OrderStartTimeStamp	2024-04-30T23:00:06
+OrderEndTimeStamp	2024-04-27T23:40:06
 IsSuccessfull	0

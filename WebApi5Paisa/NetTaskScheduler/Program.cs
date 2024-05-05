@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetTaskScheduler.AlgoHNIBAL;
+using NetTaskScheduler.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -20,72 +22,7 @@ namespace NetTaskScheduler
 
         static void Main(string[] args)
         {
-            ////string qty = ""; string Price = ""; string OrderType = ""; string ScripData = ""; DateTime Fromdatetime;
-            ////var Todatetime = "";
-
-            ////var row1 = "";
-            ////var row2 = "";
-            ////string inputData = "";
-            ////string path = Path.Combine(Directory.GetCurrentDirectory(), @"InputTextFile\InputData.txt");
-            ////List<string> file = File.ReadAllLines(path).ToList();
-            ////foreach (string line in file)
-            ////{
-            ////    string splitline = line;
-            ////    string[] ssize = splitline.Split(new char[0]);
-            ////    row1 = ssize[0];
-            ////    row2 = ssize[1];
-
-            ////    //// Write file using StreamWriter
-            ////    if (row1 == "IsSuccessfull" && row2 == "0")
-            ////    {
-            ////        break;
-            ////    }
-
-            ////    inputData += string.Concat(string.Concat(row2), ",");
-            ////}
-            ////if (row1 == "IsSuccessfull" && row2 == "0")
-            ////{
-
-            ////    ////execute
-            ////    //string FinalPath = @"C:\Sarvesh\R&D Project\ConsoleApp1\ConsoleApp1\FInputData\FinalInput.txt";
-            ////    string fullPath = Path.Combine(Directory.GetCurrentDirectory(), @"InputTextFile\FinalInput.txt");
-            ////    TextWriter tw = new StreamWriter(fullPath, false);
-            ////    tw.Write(string.Empty);
-            ////    tw.Close();
-
-            ////    using (StreamWriter writer = new StreamWriter(fullPath))
-            ////    {
-            ////        writer.WriteLine(inputData.TrimEnd(','));
-            ////    }
-
-            ////    /////replace text 
-            ////    // string fullPath2 = @"C:\Sarvesh\R&D Project\ConsoleApp1\ConsoleApp1\InputData.txt";
-            ////    string fullPath2 = Path.Combine(Directory.GetCurrentDirectory(), @"InputTextFile\InputData.txt");
-            ////    using (StreamReader reader = new StreamReader(fullPath2))
-            ////    {
-
-            ////        string content = reader.ReadToEnd();
-            ////        reader.Close();
-            ////        content = Regex.Replace(content, "IsSuccessfull	0", "IsSuccessfull	1");
-
-            ////        // Write the content back to the file
-            ////        using (StreamWriter writer = new StreamWriter(fullPath2))
-            ////        {
-            ////            writer.Write(content);
-            ////        }
-            ////    }
-            ////    var Host = new HostBuilder()
-            ////    .ConfigureHostConfiguration(hConfig => { })
-            ////    .ConfigureServices((context, services) =>
-            ////    {
-            ////        services.AddHostedService<MyProcessor>();
-            ////    }).UseConsoleLifetime().Build();
-            ////    Host.Run();
-            ////}
-            ////else
-            ////{
-            ////    Console.WriteLine("Request already Raised for this details.");
-            ////}
+            
             var Host = new HostBuilder()
             .ConfigureHostConfiguration(hConfig => { })
             .ConfigureServices((context, services) =>
@@ -99,7 +36,7 @@ namespace NetTaskScheduler
 
     public class MyProcessor : BackgroundService
     {
-        string ClientCode = "";
+        string ClientCode = "50084790";
         string Exchange = "";
         string Key = "C67swLy6gPrdmUhNQA8JcrTRtPAvwDA5";
         string ExchangeType = ""; string Qty = ""; string Price = ""; string OrderType = ""; 
@@ -182,6 +119,13 @@ namespace NetTaskScheduler
                     //{
                     //    Console.WriteLine("Request already Raised for this details.");
                     //}
+                    string Symbol_StrikeRatePath = Path.Combine(Directory.GetCurrentDirectory(), @"Excel\Symbol_StrikeRate.xlsx");
+                    string Symbol_WeeklyMonthlyPath = Path.Combine(Directory.GetCurrentDirectory(), @"Excel\Symbol_WeeklyMonthly.xlsx");
+                    
+                    GetDataFromExcel getDataFromExcel = new GetDataFromExcel();
+                    DataTable dtSymbol_StrikeRate = getDataFromExcel.excel(Symbol_StrikeRatePath);
+
+                    DataTable dtWeeklyMonthly = getDataFromExcel.excel(Symbol_WeeklyMonthlyPath);
 
                     string fullPath3 = Path.Combine(Directory.GetCurrentDirectory(), @"InputTextFile\FinalInput.txt");
                     string[] lines = File.ReadAllLines(fullPath3);
@@ -196,13 +140,31 @@ namespace NetTaskScheduler
                         pORequest.Price = Convert.ToInt32(myString[3]);
                         pORequest.OrderType = myString[4];
                         pORequest.Symbol = myString[5];
-                        pORequest.IsIntraday = Convert.ToBoolean(myString[6]);
-                        pORequest.DisQty = Convert.ToInt32(myString[7]);
-                        pORequest.StopLossPrice = Convert.ToInt32(myString[8]);
-                        pORequest.TriggerPrice = Convert.ToInt32(myString[9]);
-                        pORequest.OrderStartTimeStamp = DateTime.Parse(myString[10]);
-                        pORequest.OrderEndTimeStamp = DateTime.Parse(myString[11]);
-                        pORequest.ScripData = pORequest.Symbol;
+                        pORequest.Expiry = myString[6];
+                        pORequest.OptionType = myString[7];
+                        pORequest.LTP = Convert.ToDouble(myString[8]);
+                        pORequest.NoOfStrike = Convert.ToInt32(myString[9]);
+                        pORequest.StrikeDirection = Convert.ToInt32(myString[10]);
+
+                        //// need to get the input data from excel
+                        var strikerate = getDataFromExcel.Get_StrikeRate(dtSymbol_StrikeRate, pORequest.Symbol, pORequest.LTP, pORequest.NoOfStrike, pORequest.StrikeDirection);
+                        var WeeklyMonthlyExpDate = getDataFromExcel.Get_WeeklyMonthlyExpDate(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
+                        
+                        pORequest.IsIntraday = Convert.ToBoolean(myString[11]);
+                        pORequest.DisQty = Convert.ToInt32(myString[12]);
+                        pORequest.StopLossPrice = Convert.ToInt32(myString[13]);
+                        pORequest.TriggerPrice = Convert.ToInt32(myString[14]);
+                        pORequest.OrderStartTimeStamp = DateTime.Parse(myString[15]);
+                        pORequest.OrderEndTimeStamp = DateTime.Parse(myString[16]);
+                        pORequest.RemoteOrderId = Guid.NewGuid();
+
+                        var year = WeeklyMonthlyExpDate.Year;
+                        var month = WeeklyMonthlyExpDate.ToString("MM");
+                        var day = WeeklyMonthlyExpDate.ToString("dd");
+                        var actmonth = WeeklyMonthlyExpDate.ToString("MMM");
+                        pORequest.ScripData = pORequest.Symbol + " " + day + " " + actmonth + " " + year + " " + pORequest.OptionType + " " + String.Format("{0:0.00}", strikerate) + "_" + year + month + day + "_" + "PE" + "_" + Math.Round(strikerate);
+
+                        //pORequest.ScripData = pORequest.Symbol + "_" + year + actmonth + date + "_"+ cePe +"_"+ Math.Round(amt);
                     }
 
 
