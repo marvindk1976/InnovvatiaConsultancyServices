@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Text.Json.Nodes;
@@ -26,7 +27,7 @@ namespace WebApi5Paisa.Controllers
         private readonly JsonData _JsonData;
         private readonly string _OpenAPIURL, _Holding,
             _MarketStatus, _LoginCheck, _AuthToken, _PlaceOrderRequest,
-            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory;
+            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory, _OrderStatus;
         #endregion
         public FivepaisaApiController(IConfiguration _iConfig)
         {
@@ -48,6 +49,7 @@ namespace WebApi5Paisa.Controllers
             _OrderBook = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:OrderBook");
             _TradeBook = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBook");
             _TradeBookHistory = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBookHistory");
+            _OrderStatus = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:OrderStatus");
 
 
             connectionString = _iConfig.GetConnectionString("ConnectionString");
@@ -298,7 +300,8 @@ namespace WebApi5Paisa.Controllers
                         IsIntraday = pORequest.IsIntraday,
                         DisQty = pORequest.DisQty,
                         StopLossPrice = pORequest.StopLossPrice,
-                        AppSource = pORequest.AppSource
+                        AppSource = pORequest.AppSource,
+                        RemoteOrderID = Guid.NewGuid()
                     }
 
                 });
@@ -307,7 +310,7 @@ namespace WebApi5Paisa.Controllers
                 //response = ApiRequest.SendApiRequestCookies(_Holding, result);
                 response = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, result);
                 ///////Log Write in txt
-                Logger.LogWrite("PlaceOrderRequest function data fetched" + DateTime.Now);
+                Logger.LogWrite("PlaceOrderRequest function data fetched" + response);
             }
             catch (Exception)
             {
@@ -328,7 +331,31 @@ namespace WebApi5Paisa.Controllers
                 //response = ApiRequest.SendApiRequestCookies(_Holding, result);
                 response = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, jsonObject.ToString());
                 ///////Log Write in txt
-                Logger.LogWrite("PlaceOrderRequest function data fetched" + DateTime.Now);
+                Logger.LogWrite("PlaceOrderRequest function data fetched." + response);
+                
+                var jsonData = JObject.Parse(response);
+                var objJsonData = jsonData["body"];
+                JsonObj jsData = JsonConvert.DeserializeObject<JsonObj>(objJsonData.ToString());
+                if(jsData.Message == "Success" && (jsData.BrokerOrderID != null || jsData.BrokerOrderID != 0))
+                {
+                    var Request = JsonConvert.SerializeObject(new
+                    {
+                        head = new { key = _apiKey },
+                        body = new
+                        {
+                            ClientCode = _clientCode,
+                            OrdStatusReqList = new[] {
+                        new {Exch = jsData.Exch , RemoteOrderID = jsData.RemoteOrderID}
+                        }}
+                    });
+                    String result = Request.Replace("^\"|\"$", "");
+
+                    //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                    response = ApiRequest.SendApiRequestOrderStatus(_OrderStatus, result);
+
+                    ///////Log Write in txt
+                    Logger.LogWrite("OrderStatus function data fetched" + response);
+                }
             }
             catch (Exception)
             {
@@ -508,7 +535,50 @@ namespace WebApi5Paisa.Controllers
 
             return response;
         }
+        [HttpGet]
+        [Route("OrderStatus")]
+        public string OrderStatus([FromQuery] string _Exch,string _RemoteOrderID)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
 
+                var Request = JsonConvert.SerializeObject(new
+                {
+                    head = new { key = _apiKey },
+                    body = new { ClientCode = _clientCode,
+                    OrdStatusReqList = new[] {
+                        new {Exch = _Exch , RemoteOrderID = _RemoteOrderID}                        
+                    }}
+                });
+                String result = Request.Replace("^\"|\"$", "");
+
+                //response = ApiRequest.SendApiRequestCookies(_Holding, result);
+                response = ApiRequest.SendApiRequestOrderStatus(_OrderStatus, result);
+
+                ///////Log Write in txt
+                Logger.LogWrite("OrderStatus function data fetched" + response);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
+        }
 
     }
 }

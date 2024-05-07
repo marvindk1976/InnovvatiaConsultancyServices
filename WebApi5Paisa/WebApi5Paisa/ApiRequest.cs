@@ -768,6 +768,75 @@ namespace WebApi5Paisa
 
         }
 
+        public static string SendApiRequestOrderStatus(string url, string Request, string Type = "Openapi")
+        {
+            string Json = "";
+            string BearerToken = "";
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"AuthToken\AuthKey.txt");
+
+                if (File.Exists(path))
+                {
+                    BearerToken = File.ReadAllText(path);
+                }
+
+                HttpWebRequest httpWebRequest = null;
+                httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+
+                httpWebRequest.Headers.Add("Authorization", "Bearer " + BearerToken);
+                httpWebRequest.Method = "POST";
+                httpWebRequest.ContentType = "application/json";
+
+
+                byte[] byteArray = Encoding.UTF8.GetBytes(Request);
+                httpWebRequest.ContentLength = byteArray.Length;
+
+
+                Stream dataStream = httpWebRequest.GetRequestStream();
+                // Write the data to the request stream.
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                // Close the Stream object.
+                dataStream.Close();
+
+                WebResponse response = httpWebRequest.GetResponse();
+
+                using (dataStream = response.GetResponseStream())
+                {
+
+                    StreamReader reader = new StreamReader(dataStream);
+                    // Read the content.
+                    Json = reader.ReadToEnd();
+
+                    /////working as required
+                    var jsonData = JObject.Parse(Json);
+                    //var objJsonData = jsonData["body"]["Data"];
+                    //IEnumerable<Holding> result = JsonConvert.DeserializeObject<IEnumerable<Holding>>(objJsonData.ToString());
+                    //var valuesList = result.Select(v => v.AvgRate).FirstOrDefault();
+
+                    ////working in required for json array
+                    ////var jsonData = JObject.Parse(Json);
+                    ////var objJsonData = jsonData["body"]["Data"];
+                    ////IEnumerable<MarketSts> result = JsonConvert.DeserializeObject<IEnumerable<MarketSts>>(objJsonData.ToString());
+                    ////var valuesList = result.ToList();
+                    ////foreach (var member in valuesList)
+                    ////{
+                    ////    Console.WriteLine(member.Exch);
+                    ////    Console.WriteLine(member.ExchDescription);
+                    ////    Console.WriteLine(member.ExchType);
+                    ////    Console.WriteLine(member.MarketStatus);
+                    ////}
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return Json;
+
+        }
+
 
         #endregion Testing Api Only
         public static string SendApiRequestCookies(string url, string Request, string Type = "Openapi")

@@ -191,7 +191,8 @@ namespace NetTaskScheduler
                                 ScripData = pORequest.ScripData,
                                 IsIntraday = pORequest.IsIntraday,
                                 DisQty = pORequest.DisQty,
-                                StopLossPrice = pORequest.StopLossPrice
+                                StopLossPrice = pORequest.StopLossPrice,
+                                RemoteOrderID = pORequest.RemoteOrderId
                             }
 
                         });

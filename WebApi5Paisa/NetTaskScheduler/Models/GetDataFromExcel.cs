@@ -52,10 +52,18 @@ namespace NetTaskScheduler.Models
             //var LTP = 48700;
             //int NoOfStrike = 5;
             //var StrikeDirection = 2;
-           
+            double nearLTP;
+            if ((LTP % 100) >= 50)
+            {
+                nearLTP = LTP + (100 - LTP % 100);
+            }
+            else
+            {
+                nearLTP = LTP - (LTP % 100);
+            }
 
             ///get data with indexStrikeRate
-            int indexStrikeRate = newList.FindIndex(a => a.StrikeRate == LTP);
+            int indexStrikeRate = newList.FindIndex(a => a.StrikeRate == nearLTP);
 
             if (StrikeDirection == 0)
             {
