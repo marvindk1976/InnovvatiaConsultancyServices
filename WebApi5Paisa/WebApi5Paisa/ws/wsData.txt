@@ -1,0 +1,1 @@
+{"Method":"MarketFeedV3","Operation":"Subscribe","ClientCode":"50084790","MarketFeedData":[{"Exch":"N","ExchType":"C","ScripCode":15083}]}

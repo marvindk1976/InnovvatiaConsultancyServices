@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Nodes;
 using WebApi5Paisa.DAL;
@@ -27,7 +28,7 @@ namespace WebApi5Paisa.Controllers
         private readonly JsonData _JsonData;
         private readonly string _OpenAPIURL, _Holding,
             _MarketStatus, _LoginCheck, _AuthToken, _PlaceOrderRequest,
-            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory, _OrderStatus;
+            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory, _OrderStatus,_WS;
         #endregion
         public FivepaisaApiController(IConfiguration _iConfig)
         {
@@ -50,7 +51,7 @@ namespace WebApi5Paisa.Controllers
             _TradeBook = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBook");
             _TradeBookHistory = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBookHistory");
             _OrderStatus = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:OrderStatus");
-
+            _WS = _iConfig.GetValue<string>("APIDetails:WbSocketURl");
 
             connectionString = _iConfig.GetConnectionString("ConnectionString");
             #endregion
@@ -580,5 +581,39 @@ namespace WebApi5Paisa.Controllers
             return response;
         }
 
+        [HttpGet]
+        [Route("WebsocketAPi")]
+        public string WebsocketAPi(string Exch,string ExchType ,int ScripCode)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            try
+            {
+                WebsocketMarketFeedDataListReq websokectMarket = new WebsocketMarketFeedDataListReq();
+                websokectMarket.Exch = Exch;
+                websokectMarket.ExchType = ExchType;
+                websokectMarket.ScripCode = ScripCode;
+
+                List<WebsocketMarketFeedDataListReq> websokectMarketList = new List<WebsocketMarketFeedDataListReq>();
+
+                websokectMarketList.Add(websokectMarket);
+
+                var dataStringSession = JsonConvert.SerializeObject(new
+                {
+                    Method = "MarketFeedV3",
+                    Operation = "Subscribe",
+                    ClientCode = _clientCode,
+                    MarketFeedData = websokectMarketList,
+                });
+
+                WebsocketServer.Connect(_WS , _clientCode, dataStringSession);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            var ws = "WebSocket Connected fetch data in Text File";
+            return ws;
+        }
     }
 }
