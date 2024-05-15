@@ -326,36 +326,82 @@ namespace WebApi5Paisa.Controllers
         {
             ResponseModel objResponseModel = new ResponseModel();
             string response = "";
+            string responseSale = "";
+            string responseOrderBook = "";
             try
             {
-                
+
                 //response = ApiRequest.SendApiRequestCookies(_Holding, result);
                 response = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, jsonObject.ToString());
                 ///////Log Write in txt
                 Logger.LogWrite("PlaceOrderRequest function data fetched." + response);
-                
+
                 var jsonData = JObject.Parse(response);
                 var objJsonData = jsonData["body"];
                 JsonObj jsData = JsonConvert.DeserializeObject<JsonObj>(objJsonData.ToString());
-                if(jsData.Message == "Success" && (jsData.BrokerOrderID != null || jsData.BrokerOrderID != 0))
+                if (jsData.Message.ToLower() == "success" && (jsData.BrokerOrderID != null || jsData.BrokerOrderID != 0))
                 {
+                    //var Request = JsonConvert.SerializeObject(new
+                    //{
+                    //    head = new { key = _apiKey },
+                    //    body = new
+                    //    {
+                    //        ClientCode = _clientCode,
+                    //        OrdStatusReqList = new[] {
+                    //    new {Exch = jsData.Exch , RemoteOrderID = jsData.RemoteOrderID}
+                    //    }}
+                    //});
+
                     var Request = JsonConvert.SerializeObject(new
                     {
                         head = new { key = _apiKey },
                         body = new
                         {
-                            ClientCode = _clientCode,
-                            OrdStatusReqList = new[] {
-                        new {Exch = jsData.Exch , RemoteOrderID = jsData.RemoteOrderID}
-                        }}
+                            ClientCode = _clientCode
+
+                        }
                     });
                     String result = Request.Replace("^\"|\"$", "");
 
                     //response = ApiRequest.SendApiRequestCookies(_Holding, result);
-                    response = ApiRequest.SendApiRequestOrderStatus(_OrderStatus, result);
+                    responseOrderBook = ApiRequest.SendApiRequestOrderBook(_OrderBook, result);
 
                     ///////Log Write in txt
-                    Logger.LogWrite("OrderStatus function data fetched" + response);
+                    Logger.LogWrite("OrderBookResponse : " + responseOrderBook);
+
+                    //var jsonOrderBook = JObject.Parse(response);
+                    //var objOrderBook = jsonOrderBook["body"]["OrderBookDetail"];
+                    dynamic objOrderBook = JObject.Parse(response);
+                    var objOrderBk = objOrderBook["body"]["OrderBookDetail"];
+
+                    List<OrderBook> objJsonOrderBook = JsonConvert.DeserializeObject<List<OrderBook>>(objOrderBk);
+
+                    var OBbrokerId = objJsonOrderBook.Find(s => Convert.ToInt32(s.BrokerOrderId) == Convert.ToInt32(jsData.BrokerOrderID));
+                    int OBbroker = Convert.ToInt32(OBbrokerId);
+
+                    var OrderId = objJsonOrderBook.Find(s => Convert.ToInt32(s.BrokerOrderId) == Convert.ToInt32(jsData.BrokerOrderID));
+
+                    var OrderStatus = objJsonOrderBook.Find(s => Convert.ToInt32(s.BrokerOrderId) == Convert.ToInt32(jsData.BrokerOrderID));
+
+                    if ((OBbroker != null || OBbroker != 0) && OrderStatus.ToString().ToLower() == "complete")
+                    {
+                        
+                        PORequest jsondataPOSell = JsonConvert.DeserializeObject<PORequest>(jsonObject.ToString());
+                        jsondataPOSell.OrderType = "Sell";
+                        var jsonString = JsonConvert.SerializeObject(jsondataPOSell);
+
+                        Logger.LogWrite("Exit Order Request : " + jsonString);
+
+                        responseSale = ApiRequest.SendApiRequestPlaceOrderRequest(_PlaceOrderRequest, jsonString);
+
+                        Logger.LogWrite("Exit Order Response : " + responseSale);
+                    }
+                    else if((OBbroker != null || OBbroker != 0) && OrderStatus.ToString().ToLower() == "pending")
+                    {
+                        Logger.LogWrite("Order Cancel Request : " + OrderId.ToString());
+                        responseSale = ApiRequest.SendApiRequestOrderCancel(_OrderCancel, OrderId.ToString());
+                        Logger.LogWrite("Order Cancel Request : " + responseSale);
+                    }
                 }
             }
             catch (Exception)
