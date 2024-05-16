@@ -377,17 +377,19 @@ namespace WebApi5Paisa.Controllers
                     List<OrderBook> objJsonOrderBook = JsonConvert.DeserializeObject<List<OrderBook>>(objOrderBk);
 
                     var OBbrokerId = objJsonOrderBook.Find(s => Convert.ToInt32(s.BrokerOrderId) == Convert.ToInt32(jsData.BrokerOrderID));
-                    int OBbroker = Convert.ToInt32(OBbrokerId);
+                    int OBbrokerids = Convert.ToInt32(OBbrokerId.BrokerOrderId);
+                    var OrderId = Convert.ToInt64(OBbrokerId.ExchOrderID);
+                    var OrderStatus = OBbrokerId.OrderStatus;
 
-                    var OrderId = objJsonOrderBook.Find(s => Convert.ToInt32(s.BrokerOrderId) == Convert.ToInt32(jsData.BrokerOrderID));
-
-                    var OrderStatus = objJsonOrderBook.Find(s => Convert.ToInt32(s.BrokerOrderId) == Convert.ToInt32(jsData.BrokerOrderID));
-
-                    if ((OBbroker != null || OBbroker != 0) && OrderStatus.ToString().ToLower() == "complete")
+                    if ((OBbrokerids != null || OBbrokerids != 0) && OrderStatus.ToString().ToLower() == "complete")
                     {
                         
-                        PORequest jsondataPOSell = JsonConvert.DeserializeObject<PORequest>(jsonObject.ToString());
-                        jsondataPOSell.OrderType = "Sell";
+                        //PORequest jsondataPOSell = JsonConvert.DeserializeObject<PORequest>(jsonObject.ToString());
+                        //jsondataPOSell.OrderType = "Sell";
+                        //var jsonString = JsonConvert.SerializeObject(jsondataPOSell);
+
+                        Root jsondataPOSell = JsonConvert.DeserializeObject<Root>(jsonObject.ToString());
+                        jsondataPOSell.body.OrderType = "Sell";
                         var jsonString = JsonConvert.SerializeObject(jsondataPOSell);
 
                         Logger.LogWrite("Exit Order Request : " + jsonString);
@@ -396,7 +398,7 @@ namespace WebApi5Paisa.Controllers
 
                         Logger.LogWrite("Exit Order Response : " + responseSale);
                     }
-                    else if((OBbroker != null || OBbroker != 0) && OrderStatus.ToString().ToLower() == "pending")
+                    else if ((OBbrokerids != null || OBbrokerids != 0) && (OrderId != null || OrderId != 0) && OrderStatus.ToString().ToLower() == "pending")
                     {
                         Logger.LogWrite("Order Cancel Request : " + OrderId.ToString());
                         responseSale = ApiRequest.SendApiRequestOrderCancel(_OrderCancel, OrderId.ToString());
