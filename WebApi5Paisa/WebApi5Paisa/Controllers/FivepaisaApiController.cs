@@ -28,7 +28,7 @@ namespace WebApi5Paisa.Controllers
         private readonly JsonData _JsonData;
         private readonly string _OpenAPIURL, _Holding,
             _MarketStatus, _LoginCheck, _AuthToken, _PlaceOrderRequest,
-            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory, _OrderStatus,_WS;
+            _Margin, _Position, _OrderCancel, _OrderBook, _TradeBook, _TradeBookHistory, _OrderStatus,_WS,_Historical;
         #endregion
         public FivepaisaApiController(IConfiguration _iConfig)
         {
@@ -51,6 +51,7 @@ namespace WebApi5Paisa.Controllers
             _TradeBook = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBook");
             _TradeBookHistory = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:TradeBookHistory");
             _OrderStatus = _OpenAPIURL + _iConfig.GetValue<string>("APIDetails:OrderStatus");
+            _Historical = _iConfig.GetValue<string>("APIDetails:Historical");
             _WS = _iConfig.GetValue<string>("APIDetails:WbSocketURl");
 
             connectionString = _iConfig.GetConnectionString("ConnectionString");
@@ -662,6 +663,41 @@ namespace WebApi5Paisa.Controllers
             }
             var ws = "WebSocket Connected fetch data in Text File";
             return ws;
+        }
+
+        [HttpGet]
+        [Route("historical")]
+        public string historical([FromQuery] string _Exch, string _ExchType, int ScripCode, string Interval, string FromDate, string EndDate)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            string response = "";
+            try
+            {
+                string URL = _Historical + "V2/historical" + "/" + _Exch + "/" + _ExchType + "/" + ScripCode + "/" + Interval + "?" + "from" + "=" + FromDate + "&" + "end" + "=" + EndDate;
+
+                response = ApiRequest.SendApiRequesthistorical(URL);
+
+                ///////Log Write in txt
+                 Logger.LogWriteInfo("historical function data fetched" + response);
+
+                ///////data is saved in db
+                //Employee employee = new Employee();
+                //try
+                //{
+                //    employee.flag = "insert";
+                //    employeeDAL.Empdml(employee, out msg, connectionString);
+                //}
+                //catch (Exception ex)
+                //{
+
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return response;
         }
     }
 }

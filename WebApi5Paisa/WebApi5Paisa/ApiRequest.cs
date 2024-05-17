@@ -836,6 +836,48 @@ namespace WebApi5Paisa
             return Json;
 
         }
+        public static string SendApiRequesthistorical(string url)
+        {
+            string Json = "";
+            string BearerToken = "";
+            try
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"AuthToken\AuthKey.txt");
+
+                if (File.Exists(path))
+                {
+                    BearerToken = File.ReadAllText(path);
+                }
+
+                HttpWebRequest httpWebRequest = null;
+                httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+                if (BearerToken!= null)
+                    httpWebRequest.Headers.Add("Authorization", "Bearer " + BearerToken);
+                //httpWebRequest.Headers.Add("5Paisa-API-Uid", "nosniff");
+                
+                httpWebRequest.Method = "GET";
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Accept = "application/json";
+
+                
+                WebResponse response = httpWebRequest.GetResponse();
+                
+                using (Stream dataStream = response.GetResponseStream())
+                {
+                    // Open the stream using a StreamReader for easy access.
+                    StreamReader reader = new StreamReader(dataStream);
+                    // Read the content.
+                    Json = reader.ReadToEnd();
+                }
+
+                return Json;
+            }
+            catch (Exception ex)
+            {
+                return "GetError:" + ex.Message;
+            }
+
+        }
 
 
         #endregion Testing Api Only
