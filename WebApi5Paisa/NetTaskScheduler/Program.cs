@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetTaskScheduler.AlgoHNIBAL;
 using NetTaskScheduler.Models;
@@ -142,12 +143,73 @@ namespace NetTaskScheduler
                         pORequest.Symbol = myString[5];
                         pORequest.Expiry = myString[6];
                         pORequest.OptionType = myString[7];
-                        pORequest.LTP = Convert.ToDouble(myString[8]);
+                        pORequest.ScriptCode = Convert.ToInt32(myString[8]);
                         pORequest.NoOfStrike = Convert.ToInt32(myString[9]);
                         pORequest.StrikeDirection = Convert.ToInt32(myString[10]);
 
+                        var Scode = getDataFromExcel.Get_LTPByScripCode(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
+
+                        //Imolement WebSocket
+
+                        WebsocketMarketFeedDataListReq websokectMarket = new WebsocketMarketFeedDataListReq();
+                        websokectMarket.Exch = pORequest.Exchange;
+                        websokectMarket.ExchType = pORequest.ExchangeType;
+                        websokectMarket.ScripCode = Convert.ToInt32(Scode);
+
+                        List<WebsocketMarketFeedDataListReq> websokectMarketList = new List<WebsocketMarketFeedDataListReq>();
+
+                        websokectMarketList.Add(websokectMarket);
+
+                        var dataStringSession = JsonConvert.SerializeObject(new
+                        {
+                            Method = "MarketFeedV3",
+                            Operation = "Subscribe",
+                            ClientCode = ClientCode,
+                            MarketFeedData = websokectMarketList,
+                        });
+
+                        //String result = dataStringSession.Replace("^\"|\"$", "");
+                        //POrderRequestApi pOrderRequestApi = new POrderRequestApi();
+                        //var responseData = pOrderRequestApi.CallWSRequestApi(pORequest.Exchange, pORequest.ExchangeType,Scode);
+                        string fullPathws = Path.Combine(Directory.GetCurrentDirectory(), @"SaveWSFeedJson\wsData.txt");
+                        TextWriter tws = new StreamWriter(fullPathws, false);
+                        tws.Write(string.Empty);
+                        tws.Close();
+
+                        using (StreamWriter writer = new StreamWriter(fullPathws))
+                        {
+                            writer.WriteLine(dataStringSession);
+                        }
+
+                        //Get LTP From WSApp Final Output File Path
+
+                        var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("config.json", optional: false);
+
+                        IConfiguration config = builder.Build();
+
+                        var getJsonValue = config.GetSection("GetJsonValue").Get<GetJsonValue>();
+
+                        //var ltpWS = 48700;
+
+                        List<wsData> jswsData = new List<wsData>();
+
+                        do
+                        {
+                            string jsonData = string.Empty;
+                            jsonData = File.ReadAllText(getJsonValue.GetUrlFromWSFinalOutputFolderPath);
+                            jswsData = JsonConvert.DeserializeObject<List<wsData>>(jsonData.ToString());
+
+                        } while (jswsData == null);
+
+                        var ltpWS = jswsData.Select(l => l.LastRate).First();
+                        if(ltpWS == 0)
+                        {
+                            ltpWS = 48700;
+                        }
+
+                        //getDataFromExcel.Get_LTPByScripCode(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
                         //// need to get the input data from excel
-                        var strikerate = getDataFromExcel.Get_StrikeRate(dtSymbol_StrikeRate, pORequest.Symbol, pORequest.LTP, pORequest.NoOfStrike, pORequest.StrikeDirection);
+                        var strikerate = getDataFromExcel.Get_StrikeRate(dtSymbol_StrikeRate, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, pORequest.StrikeDirection);
                         var WeeklyMonthlyExpDate = getDataFromExcel.Get_WeeklyMonthlyExpDate(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
                         
                         pORequest.IsIntraday = Convert.ToBoolean(myString[11]);

@@ -630,7 +630,7 @@ namespace WebApi5Paisa.Controllers
             return response;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("WebsocketAPi")]
         public string WebsocketAPi(string Exch,string ExchType ,int ScripCode)
         {
@@ -664,7 +664,41 @@ namespace WebApi5Paisa.Controllers
             var ws = "WebSocket Connected fetch data in Text File";
             return ws;
         }
+        [HttpGet]
+        [Route("WebsocketAPiJson")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public string WebsocketAPiJson(string Exch, string ExchType, int ScripCode)
+        {
+            ResponseModel objResponseModel = new ResponseModel();
+            try
+            {
+                WebsocketMarketFeedDataListReq websokectMarket = new WebsocketMarketFeedDataListReq();
+                websokectMarket.Exch = Exch;
+                websokectMarket.ExchType = ExchType;
+                websokectMarket.ScripCode = ScripCode;
 
+                List<WebsocketMarketFeedDataListReq> websokectMarketList = new List<WebsocketMarketFeedDataListReq>();
+
+                websokectMarketList.Add(websokectMarket);
+
+                var dataStringSession = JsonConvert.SerializeObject(new
+                {
+                    Method = "MarketFeedV3",
+                    Operation = "Subscribe",
+                    ClientCode = _clientCode,
+                    MarketFeedData = websokectMarketList,
+                });
+
+                WebsocketServer.Connect(_WS, _clientCode, dataStringSession.ToString());
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            var ws = "WebSocket Connected fetch data in Text File";
+            return ws;
+        }
         [HttpGet]
         [Route("historical")]
         public string historical([FromQuery] string _Exch, string _ExchType, int ScripCode, string Interval, string FromDate, string EndDate)

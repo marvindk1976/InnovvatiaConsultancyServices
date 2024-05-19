@@ -15,7 +15,7 @@ namespace NetTaskScheduler.AlgoHNIBAL
             public string Symbol { get; set; }
             public string Expiry { get; set; }
             public string OptionType { get; set; }
-            public double LTP { get; set; }
+            public int ScriptCode { get; set; }
             public int NoOfStrike { get; set; }
             public int StrikeDirection { get; set; }
             public Guid RemoteOrderId { get; set; }

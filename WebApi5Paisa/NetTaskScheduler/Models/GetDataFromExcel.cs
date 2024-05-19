@@ -12,6 +12,7 @@ namespace NetTaskScheduler.Models
 {
     public class GetDataFromExcel
     {
+        string ActScode;
         public DataTable excel(string fullPath)
         {
             DataTable dt = new DataTable();
@@ -125,6 +126,52 @@ namespace NetTaskScheduler.Models
                 ActExpdate = MonthlynewList.MonthlyExpDate;
             }
             return ActExpdate;
+        }
+
+        public string Get_LTPByScripCode(DataTable dtWeeklyMonthly, string WeeklyMonthlyExp, string symbol)
+        {
+            IList<Symbol_GetLTPbyScripcode> items2 = dtWeeklyMonthly.AsEnumerable().Select(row => new Symbol_GetLTPbyScripcode
+            {
+                symbol = row.Field<string>("Symbols"),
+                WeeklyExpDate = row.Field<DateTime>("WeeklyexpDate"),
+                MonthlyExpDate = row.Field<DateTime>("MonthlyexpDate"),
+                sCode = row.Field<string>("scripCode")
+            }).ToList();
+
+            ///filter data save for Symbol_WeeklyMonthyDate
+            List<Symbol_GetLTPbyScripcode> newList1 = items2.Where(m => m.symbol == symbol).ToList();
+            //string date = "05/21/2024";
+            //var currentdate = DateTime.Parse(date);
+            var currentdate = DateTime.Parse(DateTime.Now.ToString("MM/dd/yyyy"));
+            DateTime ActExpdate = new DateTime();
+            
+            if (WeeklyMonthlyExp.ToUpper().Contains("W"))
+            {
+                string[] split = WeeklyMonthlyExp.ToUpper().Split("W");
+                int sp = Convert.ToInt32(split[1]);
+
+                /////get first matching index
+                int index = newList1.FindIndex(a => Convert.ToDateTime(a.WeeklyExpDate) >= currentdate);
+                int indexexpDate = index + (sp - 1);
+
+                var WeeklynewList = newList1.ElementAt(indexexpDate);
+                ActExpdate = WeeklynewList.WeeklyExpDate;
+                ActScode = WeeklynewList.sCode;
+
+            }
+            else if (WeeklyMonthlyExp.ToUpper().Contains("M"))
+            {
+                string[] split = WeeklyMonthlyExp.ToUpper().Split("M");
+                int sp = Convert.ToInt32(split[1]);
+
+                /////get first matching index
+                int index = newList1.FindIndex(a => Convert.ToDateTime(a.MonthlyExpDate) >= currentdate);
+                int indexexpDate = index + (sp - 1);
+                var MonthlynewList = newList1.ElementAt(indexexpDate);
+                ActExpdate = MonthlynewList.MonthlyExpDate;
+                ActScode = MonthlynewList.sCode;
+            }
+            return ActScode;
         }
     }
 }
