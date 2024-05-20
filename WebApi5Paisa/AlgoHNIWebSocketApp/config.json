@@ -1,0 +1,6 @@
+{
+  "GetJsonWSJson": {
+    "WsUrlFromTaskSchedulerPath": "C:\\Sarvesh\\LiveProject\\InnovatiaCS\\WebApi5Paisa\\NetTaskScheduler\\bin\\Debug\\netcoreapp3.1\\SaveWSFeedJson\\wsData.txt",
+    "Token": "C:\\Sarvesh\\LiveProject\\InnovatiaCS\\WebApi5Paisa\\WebApi5Paisa\\AuthToken\\AuthKey.txt"
+  }
+}
