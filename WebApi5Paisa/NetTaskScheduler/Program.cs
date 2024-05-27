@@ -83,6 +83,10 @@ namespace NetTaskScheduler
                         inputData += string.Concat(string.Concat(row2), ",");
                     }
                 }
+
+                ScriptCodePECENoofStrike scriptCodePECENoofStrike = new ScriptCodePECENoofStrike();
+                scriptCodePECENoofStrike.GetScriptCodePECENoofStrike(inputData);
+
                 if (row1 == "IsSuccessfull" && row2 == "0")
                 {
 
@@ -149,7 +153,7 @@ namespace NetTaskScheduler
 
                         var Scode = getDataFromExcel.Get_LTPByScripCode(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
 
-                        //Imolement WebSocket
+                        //Implement WebSocket
 
                         WebsocketMarketFeedDataListReq websokectMarket = new WebsocketMarketFeedDataListReq();
                         websokectMarket.Exch = pORequest.Exchange;
@@ -189,8 +193,6 @@ namespace NetTaskScheduler
 
                         var getJsonValue = config.GetSection("GetJsonValue").Get<GetJsonValue>();
 
-                        //var ltpWS = 48700;
-
                         List<wsData> jswsData = new List<wsData>();
 
                         do
@@ -202,11 +204,11 @@ namespace NetTaskScheduler
                         } while (jswsData == null);
 
                         var ltpWS = jswsData.Select(l => l.LastRate).First();
-                        if(ltpWS == 0)
+                        if(pORequest.Price > 0)
                         {
-                            ltpWS = 48700;
+                            ltpWS = pORequest.Price;
                         }
-
+                        
                         //getDataFromExcel.Get_LTPByScripCode(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
                         //// need to get the input data from excel
                         var strikerate = getDataFromExcel.Get_StrikeRate(dtSymbol_StrikeRate, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, pORequest.StrikeDirection);
@@ -264,18 +266,18 @@ namespace NetTaskScheduler
 
                         Console.WriteLine($"The Place Order request is processed Successfully...! {DateTime.Now}");
                         //Thread.Sleep(10000);
-                        await Task.Delay(10000);
+                        await Task.Delay(60000);
                     }
                     else
                     {
                         Console.WriteLine($"Date time is not Valid for Place Order request...! {DateTime.Now}");
-                        await Task.Delay(10000);
+                        await Task.Delay(60000);
                     }
                 }
                 else
                 {
                     Console.WriteLine($"The Place Order request is Already processed.Modify the inputData { DateTime.Now}");
-                    await Task.Delay(10000);
+                    await Task.Delay(60000);
                 }
             }
             return;
