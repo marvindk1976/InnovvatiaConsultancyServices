@@ -66,7 +66,11 @@ namespace NetTaskScheduler.Models
             ///get data with indexStrikeRate
             int indexStrikeRate = newList.FindIndex(a => a.StrikeRate == nearLTP);
 
-            if (StrikeDirection == 0)
+            if (indexStrikeRate < 0)
+            {
+                StrikeRate = nearLTP;
+            }
+            else if (StrikeDirection == 0)
             {
                 StrikeRate = LTP;
             }
