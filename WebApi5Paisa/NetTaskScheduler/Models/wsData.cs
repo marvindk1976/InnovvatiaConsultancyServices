@@ -12,19 +12,19 @@ namespace NetTaskScheduler.Models
         public double LastRate { get; set; }
         public int LastQty { get; set; }
         public int TotalQty { get; set; }
-        public int High { get; set; }
+        public double High { get; set; }
         public double Low { get; set; }
         public int OpenRate { get; set; }
         public double PClose { get; set; }
         public double AvgRate { get; set; }
         public int Time { get; set; }
         public int BidQty { get; set; }
-        public int BidRate { get; set; }
+        public double BidRate { get; set; }
         public int OffQty { get; set; }
         public double OffRate { get; set; }
         public int TBidQ { get; set; }
         public int TOffQ { get; set; }
         public string TickDt { get; set; }
-        public int ChgPcnt { get; set; }
+        public string ChgPcnt { get; set; }
     }
 }

@@ -3,7 +3,7 @@
     "BaseUrl": "http://localhost:26328/",
     "POrderUrl": "api/FivepaisaApi/POrderRequest",
     "WsUrl": "api/FivepaisaApi/WebsocketAPiJson",
-    "GetUrlFromWSFinalOutputFolderPath": "C:\\Sarvesh\\R&D Project\\ConsoleApp1\\ConsoleApp7\\bin\\Debug\\netcoreapp3.1\\WSResponse\\FinalOutput.txt"
+    "GetUrlFromWSFinalOutputFolderPath": "C:\\Sarvesh\\LiveProject\\InnovatiaCS\\WebApi5Paisa\\AlgoHNIWebSocketApp\\bin\\Debug\\netcoreapp3.1\\WSResponse\\FinalOutput.txt"
 
   }
   //,

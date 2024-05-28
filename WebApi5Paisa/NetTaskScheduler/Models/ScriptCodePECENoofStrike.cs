@@ -97,21 +97,21 @@ namespace NetTaskScheduler.Models
                 var getJsonValue = config.GetSection("GetJsonValue").Get<GetJsonValue>();
 
                 List<wsData> jswsData = new List<wsData>();
-
+                double ltpWS = 0;
+                if (pORequest.Price > 0)
+                {
+                    ltpWS = pORequest.Price;
+                }
                 do
                 {
                     string jsonData = string.Empty;
                     jsonData = File.ReadAllText(getJsonValue.GetUrlFromWSFinalOutputFolderPath);
                     jswsData = JsonConvert.DeserializeObject<List<wsData>>(jsonData.ToString());
+                    
+                    if(jswsData != null)
+                     ltpWS = jswsData.Select(l => l.LastRate).First();
 
-                } while (jswsData == null);
-
-                var ltpWS = jswsData.Select(l => l.LastRate).First();
-
-                if (pORequest.Price > 0)
-                {
-                    ltpWS = pORequest.Price;
-                }
+                } while (jswsData == null || ltpWS == 0);
 
                 //// need to get the input data from excel
                 var strikerate = getDataFromExcel.Get_StrikeRate(dtSymbol_StrikeRate, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, 0);
