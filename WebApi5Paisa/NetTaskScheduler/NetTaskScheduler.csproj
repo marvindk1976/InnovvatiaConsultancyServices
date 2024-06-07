@@ -19,6 +19,9 @@
     <None Update="config.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Excel\ScripMaster.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Excel\Symbol_StrikeRate.xlsx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -85,7 +85,7 @@ namespace NetTaskScheduler
                 }
 
                 ScriptCodePECENoofStrike scriptCodePECENoofStrike = new ScriptCodePECENoofStrike();
-                scriptCodePECENoofStrike.GetScriptCodePECENoofStrike(inputData);
+                var getScripDataPECE = scriptCodePECENoofStrike.GetScriptCodePECENoofStrike(inputData);
 
                 if (row1 == "IsSuccessfull" && row2 == "0")
                 {
@@ -119,19 +119,7 @@ namespace NetTaskScheduler
                             writer.Write(content);
                         }
                     }
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine("Request already Raised for this details.");
-                    //}
-                    string Symbol_StrikeRatePath = Path.Combine(Directory.GetCurrentDirectory(), @"Excel\Symbol_StrikeRate.xlsx");
-                    string Symbol_WeeklyMonthlyPath = Path.Combine(Directory.GetCurrentDirectory(), @"Excel\Symbol_WeeklyMonthly.xlsx");
                     
-                    GetDataFromExcel getDataFromExcel = new GetDataFromExcel();
-                    DataTable dtSymbol_StrikeRate = getDataFromExcel.excel(Symbol_StrikeRatePath);
-
-                    DataTable dtWeeklyMonthly = getDataFromExcel.excel(Symbol_WeeklyMonthlyPath);
-
                     string fullPath3 = Path.Combine(Directory.GetCurrentDirectory(), @"InputTextFile\FinalInput.txt");
                     string[] lines = File.ReadAllLines(fullPath3);
                     foreach (string line in lines)
@@ -146,91 +134,17 @@ namespace NetTaskScheduler
                         pORequest.OrderType = myString[4];
                         pORequest.Symbol = myString[5];
                         pORequest.Expiry = myString[6];
-                        pORequest.OptionType = myString[7];
-                        pORequest.ScriptCode = Convert.ToInt32(myString[8]);
-                        pORequest.NoOfStrike = Convert.ToInt32(myString[9]);
-                        pORequest.StrikeDirection = Convert.ToInt32(myString[10]);
+                        pORequest.NoOfStrike = Convert.ToInt32(myString[7]);
+                        pORequest.StrikeDirection = Convert.ToInt32(myString[8]);
 
-                        var Scode = getDataFromExcel.Get_LTPByScripCode(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
-
-                        //Implement WebSocket
-
-                        WebsocketMarketFeedDataListReq websokectMarket = new WebsocketMarketFeedDataListReq();
-                        websokectMarket.Exch = pORequest.Exchange;
-                        websokectMarket.ExchType = pORequest.ExchangeType;
-                        websokectMarket.ScripCode = Convert.ToInt32(Scode);
-
-                        List<WebsocketMarketFeedDataListReq> websokectMarketList = new List<WebsocketMarketFeedDataListReq>();
-
-                        websokectMarketList.Add(websokectMarket);
-
-                        var dataStringSession = JsonConvert.SerializeObject(new
-                        {
-                            Method = "MarketFeedV3",
-                            Operation = "Subscribe",
-                            ClientCode = ClientCode,
-                            MarketFeedData = websokectMarketList,
-                        });
-
-                        //String result = dataStringSession.Replace("^\"|\"$", "");
-                        //POrderRequestApi pOrderRequestApi = new POrderRequestApi();
-                        //var responseData = pOrderRequestApi.CallWSRequestApi(pORequest.Exchange, pORequest.ExchangeType,Scode);
-                        string fullPathws = Path.Combine(Directory.GetCurrentDirectory(), @"SaveWSFeedJson\wsData.txt");
-                        TextWriter tws = new StreamWriter(fullPathws, false);
-                        tws.Write(string.Empty);
-                        tws.Close();
-
-                        using (StreamWriter writer = new StreamWriter(fullPathws))
-                        {
-                            writer.WriteLine(dataStringSession);
-                        }
-
-                        //Get LTP From WSApp Final Output File Path
-
-                        var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("config.json", optional: false);
-
-                        IConfiguration config = builder.Build();
-
-                        var getJsonValue = config.GetSection("GetJsonValue").Get<GetJsonValue>();
-
-                        List<wsData> jswsData = new List<wsData>();
-
-                        double ltpWS = 0;
-                        if (pORequest.Price > 0)
-                        {
-                            ltpWS = pORequest.Price;
-                        }
-                        do
-                        {
-                            string jsonData = string.Empty;
-                            jsonData = File.ReadAllText(getJsonValue.GetUrlFromWSFinalOutputFolderPath);
-                            jswsData = JsonConvert.DeserializeObject<List<wsData>>(jsonData.ToString());
-
-                            if (jswsData != null)
-                                ltpWS = jswsData.Select(l => l.LastRate).First();
-
-                        } while (jswsData == null || ltpWS == 0);
-
-                        //getDataFromExcel.Get_LTPByScripCode(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
-                        //// need to get the input data from excel
-                        var strikerate = getDataFromExcel.Get_StrikeRate(dtSymbol_StrikeRate, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, pORequest.StrikeDirection);
-                        var WeeklyMonthlyExpDate = getDataFromExcel.Get_WeeklyMonthlyExpDate(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
-                        
-                        pORequest.IsIntraday = Convert.ToBoolean(myString[11]);
-                        pORequest.DisQty = Convert.ToInt32(myString[12]);
-                        pORequest.StopLossPrice = Convert.ToInt32(myString[13]);
-                        pORequest.TriggerPrice = Convert.ToInt32(myString[14]);
-                        pORequest.OrderStartTimeStamp = DateTime.Parse(myString[15]);
-                        pORequest.OrderEndTimeStamp = DateTime.Parse(myString[16]);
+                        pORequest.IsIntraday = Convert.ToBoolean(myString[9]);
+                        pORequest.DisQty = Convert.ToInt32(myString[10]);
+                        pORequest.StopLossPrice = Convert.ToInt32(myString[11]);
+                        pORequest.TriggerPrice = Convert.ToInt32(myString[12]);
+                        pORequest.OrderStartTimeStamp = DateTime.Parse(myString[13]);
+                        pORequest.OrderEndTimeStamp = DateTime.Parse(myString[14]);
                         pORequest.RemoteOrderId = Guid.NewGuid();
 
-                        var year = WeeklyMonthlyExpDate.Year;
-                        var month = WeeklyMonthlyExpDate.ToString("MM");
-                        var day = WeeklyMonthlyExpDate.ToString("dd");
-                        var actmonth = WeeklyMonthlyExpDate.ToString("MMM");
-                        pORequest.ScripData = pORequest.Symbol + " " + day + " " + actmonth + " " + year + " " + pORequest.OptionType + " " + String.Format("{0:0.00}", strikerate) + "_" + year + month + day + "_" + "PE" + "_" + Math.Round(strikerate);
-
-                        //pORequest.ScripData = pORequest.Symbol + "_" + year + actmonth + date + "_"+ cePe +"_"+ Math.Round(amt);
                     }
 
 
