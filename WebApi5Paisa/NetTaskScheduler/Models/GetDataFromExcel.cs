@@ -72,7 +72,7 @@ namespace NetTaskScheduler.Models
             }
             else if (StrikeDirection == 0)
             {
-                StrikeRate = LTP;
+                StrikeRate = nearLTP;
             }
             else if (StrikeDirection == 1)
             {

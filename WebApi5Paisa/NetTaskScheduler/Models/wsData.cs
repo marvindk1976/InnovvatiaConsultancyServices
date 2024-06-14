@@ -14,7 +14,7 @@ namespace NetTaskScheduler.Models
         public int TotalQty { get; set; }
         public double High { get; set; }
         public double Low { get; set; }
-        public int OpenRate { get; set; }
+        public double OpenRate { get; set; }
         public double PClose { get; set; }
         public double AvgRate { get; set; }
         public int Time { get; set; }

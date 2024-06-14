@@ -73,7 +73,7 @@ namespace NetTaskScheduler.Models
                 double ltpWS = 0;
                 ltpWS = CallWSGetLTPByScipCode(pORequest.Exchange,pORequest.ExchangeType,Scode,pORequest.Price,ClientCode);
                 //// need to get the input data from excel
-                var strikerate = getDataFromExcel.Get_StrikeRate(dtScripMaster, pORequest.Symbol, ltpWS = 54100, pORequest.NoOfStrike, 0);
+                var strikerate = getDataFromExcel.Get_StrikeRate(dtScripMaster, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, 0);
 
                 //var WeeklyMonthlyExpDate = getDataFromExcel.Get_WeeklyMonthlyExpDate(dtWeeklyMonthly, pORequest.Expiry, pORequest.Symbol);
                 var ScodePECEXX = getDataFromExcel.Get_LTPByScripCode(dtScripMaster, pORequest.Exchange, pORequest.ExchangeType ="D", pORequest.Symbol, pORequest.Expiry, strikerate);
@@ -83,21 +83,24 @@ namespace NetTaskScheduler.Models
                 var scPE = intList[0];
                 var scCE = intList[1];
 
-                double ltpWSPeCe = 0;
-                ltpWSPeCe = CallWSGetLTPByScipCode(pORequest.Exchange, pORequest.ExchangeType, Scode, pORequest.Price, ClientCode);
+                double ltpWSPe = 0;
+                ltpWSPe = CallWSGetLTPByScipCode(pORequest.Exchange, pORequest.ExchangeType, scPE.ToString(), pORequest.Price, ClientCode);
 
                 //// need to get the input data from excel
-                var strikeRatePe = getDataFromExcel.Get_StrikeRate(dtScripMaster, pORequest.Symbol, ltpWS = 54100, pORequest.NoOfStrike, 0);
+                var strikeRatePe = getDataFromExcel.Get_StrikeRate(dtScripMaster, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, 0);
                 var ScripDataPE = getDataFromExcel.Get_ScripData(dtScripMaster, pORequest.Exchange, pORequest.ExchangeType, pORequest.Symbol, pORequest.Expiry, strikeRatePe, "PE");
 
-                var strikeRateCe = getDataFromExcel.Get_StrikeRate(dtScripMaster, pORequest.Symbol, ltpWS = 54100, pORequest.NoOfStrike, 0);
+                double ltpWSCe = 0;
+                ltpWSCe = CallWSGetLTPByScipCode(pORequest.Exchange, pORequest.ExchangeType, scCE.ToString(), pORequest.Price, ClientCode);
+
+                var strikeRateCe = getDataFromExcel.Get_StrikeRate(dtScripMaster, pORequest.Symbol, ltpWS, pORequest.NoOfStrike, 0);
                 var ScripDataCE = getDataFromExcel.Get_ScripData(dtScripMaster, pORequest.Exchange, pORequest.ExchangeType, pORequest.Symbol, pORequest.Expiry, strikeRateCe, "CE");
                 response = ScripDataPE + "," + ScripDataCE;
             }
 
             return response;
         }
-        public int CallWSGetLTPByScipCode(string Exchange,string ExchangeType,string Scode,double Price,string ClientCode)
+        public double CallWSGetLTPByScipCode(string Exchange,string ExchangeType,string Scode,double Price,string ClientCode)
         {
             double ltpWS = 0;
             //Implement WebSocket
@@ -155,7 +158,7 @@ namespace NetTaskScheduler.Models
 
             } while (jswsData == null || ltpWS == 0);
 
-            return (int)ltpWS;
+            return (double)ltpWS;
         }
     }
 }
