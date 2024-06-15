@@ -158,6 +158,10 @@ namespace NetTaskScheduler.Models
 
             } while (jswsData == null || ltpWS == 0);
 
+
+            TextWriter twsClear = new StreamWriter(getJsonValue.GetUrlFromWSFinalOutputFolderPath, false);
+            twsClear.Write(string.Empty);
+            twsClear.Close();
             return (double)ltpWS;
         }
     }

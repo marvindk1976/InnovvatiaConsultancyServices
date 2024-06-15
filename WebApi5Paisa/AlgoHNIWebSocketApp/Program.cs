@@ -60,9 +60,9 @@ namespace AlgoHNIWebSocketApp
 
                     var builder1 = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("config.json", optional: false);
 
-                    IConfiguration config1 = builder.Build();
+                    IConfiguration config1 = builder1.Build();
 
-                    var getJsonValue1 = config.GetSection("GetJsonWSJson").Get<GetJsonValue>();
+                    var getJsonValue1 = config1.GetSection("GetJsonWSJson").Get<GetJsonValue>();
                     string jsonData = string.Empty;
                     jsonData = File.ReadAllText(getJsonValue1.WsUrlFromTaskSchedulerPath);
                     websocket.Send(jsonData);
@@ -89,6 +89,15 @@ namespace AlgoHNIWebSocketApp
                 {
                     writer.WriteLine(e.Message);
                 }
+                var builder1 = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("config.json", optional: false);
+
+                IConfiguration config1 = builder1.Build();
+
+                var getJsonValue1 = config1.GetSection("GetJsonWSJson").Get<GetJsonValue>();
+
+                TextWriter tw1 = new StreamWriter(getJsonValue1.WsUrlFromTaskSchedulerPath, false);
+                tw1.Write(string.Empty);
+                tw1.Close();
 
                 websocket.Close();
                 websocket = null;
