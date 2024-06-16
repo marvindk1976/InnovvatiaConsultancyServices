@@ -122,26 +122,9 @@ namespace NetTaskScheduler.Models
                 MarketFeedData = websokectMarketList,
             });
 
+            webSocketServer webSocketServer = new webSocketServer();
+            var getWSData = webSocketServer.wsConnect(dataStringSession);
 
-            string fullPathws = Path.Combine(Directory.GetCurrentDirectory(), @"SaveWSFeedJson\wsData.txt");
-            TextWriter tws = new StreamWriter(fullPathws, false);
-            tws.Write(string.Empty);
-            tws.Close();
-
-            using (StreamWriter writer = new StreamWriter(fullPathws))
-            {
-                writer.WriteLine(dataStringSession);
-            }
-
-            //Get LTP From WSApp Final Output File Path
-
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("config.json", optional: false);
-
-            IConfiguration config = builder.Build();
-
-            var getJsonValue = config.GetSection("GetJsonValue").Get<GetJsonValue>();
-
-            List<wsData> jswsData = new List<wsData>();
             
             if (Price > 0)
             {
@@ -149,19 +132,12 @@ namespace NetTaskScheduler.Models
             }
             do
             {
-                string jsonData = string.Empty;
-                jsonData = File.ReadAllText(getJsonValue.GetUrlFromWSFinalOutputFolderPath);
-                jswsData = JsonConvert.DeserializeObject<List<wsData>>(jsonData.ToString());
+               
+                if (getWSData != null)
+                    ltpWS = getWSData.Select(l => l.LastRate).First();
 
-                if (jswsData != null)
-                    ltpWS = jswsData.Select(l => l.LastRate).First();
+            } while (getWSData == null || ltpWS == 0);
 
-            } while (jswsData == null || ltpWS == 0);
-
-
-            TextWriter twsClear = new StreamWriter(getJsonValue.GetUrlFromWSFinalOutputFolderPath, false);
-            twsClear.Write(string.Empty);
-            twsClear.Close();
             return (double)ltpWS;
         }
     }

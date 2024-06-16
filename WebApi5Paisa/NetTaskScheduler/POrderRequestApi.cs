@@ -65,5 +65,6 @@ namespace NetTaskScheduler
         public string POrderUrl { get; set; }
         public string WsUrl { get; set; }
         public string GetUrlFromWSFinalOutputFolderPath { get; set; }
+        public string Token { get; set; }
     }
 }
